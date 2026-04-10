@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>document.odoc.html</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --paper: #fffdfa;
+      --ink: #162033;
+      --accent: #0f766e;
+      --accent-soft: #ccfbf1;
+      --line: #d8dee9;
+      --muted: #526074;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font: 16px/1.6 "Iowan Old Style", "Georgia", serif;
+      background:
+        radial-gradient(circle at top right, rgba(204, 251, 241, 0.85), transparent 22rem),
+        linear-gradient(180deg, #eff6ff 0%, var(--bg) 60%);
+    }
+
+    .app {
+      width: min(1200px, calc(100vw - 2rem));
+      margin: 1rem auto;
+      padding: 1rem;
+      border-radius: 28px;
+      border: 1px solid rgba(15, 118, 110, 0.16);
+      background: rgba(255, 253, 250, 0.92);
+      box-shadow: 0 24px 64px rgba(15, 23, 42, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    header {
+      display: grid;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font: 700 0.85rem/1 "Avenir Next", "Segoe UI", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.1rem, 4vw, 3.8rem);
+      line-height: 0.96;
+    }
+
+    p {
+      margin: 0;
+      max-width: 64ch;
+      color: var(--muted);
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+    }
+
+    .meta {
+      display: grid;
+      gap: 0.8rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: grid;
+      gap: 0.35rem;
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+      font-weight: 600;
+    }
+
+    input,
+    button {
+      font: inherit;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--ink);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(216, 222, 233, 0.95);
+    }
+
+    button {
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 140ms ease, box-shadow 140ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(22, 32, 51, 0.14);
+    }
+
+    .tool {
+      background: #ffffff;
+      color: var(--ink);
+      border-color: rgba(216, 222, 233, 0.95);
+    }
+
+    .primary {
+      background: var(--accent);
+      color: #f0fdfa;
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+      font-weight: 700;
+    }
+
+    .editorShell {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .editor {
+      min-height: 56vh;
+      padding: clamp(1.2rem, 3vw, 2.5rem);
+      border-radius: 24px;
+      background: var(--paper);
+      border: 1px solid rgba(216, 222, 233, 0.95);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      outline: none;
+    }
+
+    .editor:focus {
+      border-color: rgba(15, 118, 110, 0.48);
+      box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.08);
+    }
+
+    .editor h1,
+    .editor h2,
+    .editor h3 {
+      font-family: "Avenir Next Condensed", "Avenir Next", sans-serif;
+      letter-spacing: -0.03em;
+      color: #0f172a;
+    }
+
+    .editor blockquote {
+      margin: 1.2rem 0;
+      padding: 0.2rem 0 0.2rem 1rem;
+      border-left: 4px solid rgba(15, 118, 110, 0.28);
+      color: #334155;
+      font-style: italic;
+    }
+
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+    }
+
+    .notice {
+      min-height: 1.3rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    @media (max-width: 700px) {
+      .app {
+        width: calc(100vw - 1rem);
+        padding: 0.85rem;
+      }
+
+      .editor {
+        min-height: 48vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <span class="eyebrow">Portable Rich Document</span>
+      <h1>Hello World Document</h1>
+      <p>
+        This <code>.odoc.html</code> file is a self-contained rich-text document. Edit it in place, then export a new
+        HTML document with the same editor embedded inside.
+      </p>
+    </header>
+
+    <section class="meta">
+      <label>
+        Export file name
+        <input id="fileName" type="text" value="document.odoc.html">
+      </label>
+      <label>
+        Document title
+        <input id="docTitle" type="text" value="Hello World Document">
+      </label>
+      <label>
+        Subtitle
+        <input id="docSubtitle" type="text" value="A portable rich-text file that can create the next one">
+      </label>
+    </section>
+
+    <div class="toolbar">
+      <button class="tool" data-command="formatBlock" data-value="<h1>">H1</button>
+      <button class="tool" data-command="formatBlock" data-value="<h2>">H2</button>
+      <button class="tool" data-command="formatBlock" data-value="<p>">Body</button>
+      <button class="tool" data-command="bold">Bold</button>
+      <button class="tool" data-command="italic">Italic</button>
+      <button class="tool" data-command="insertUnorderedList">Bullets</button>
+      <button class="tool" data-command="formatBlock" data-value="<blockquote>">Quote</button>
+      <button class="tool" id="createLink">Link</button>
+      <button class="primary" id="saveSelfContained">Save Self-Contained Copy</button>
+      <button class="tool" id="downloadHtml">Download Rendered HTML</button>
+    </div>
+
+    <section class="editorShell">
+      <article id="editor" class="editor" contenteditable="true"></article>
+    </section>
+
+    <div class="footer">
+      <div id="notice" class="notice" aria-live="polite"></div>
+      <div id="wordCount"></div>
+    </div>
+  </div>
+
+  <script id="embedded-state" type="application/json">
+{
+  "fileName": "document.odoc.html",
+  "title": "Hello World Document",
+  "subtitle": "A portable rich-text file that can create the next one",
+  "content": "<h1>Hello World</h1><p>This <strong>.odoc.html</strong> file carries its own editor with it.</p><p>You can style text, add headings, and save a new document that includes the same software inside the file.</p><blockquote>Each saved copy becomes the next portable document.</blockquote><p>Try changing this text, then export a new version.</p>"
+}
+  </script>
+  <script>
+    (() => {
+      const stateNode = document.getElementById("embedded-state");
+      const state = JSON.parse(stateNode.textContent);
+      const fileNameInput = document.getElementById("fileName");
+      const titleInput = document.getElementById("docTitle");
+      const subtitleInput = document.getElementById("docSubtitle");
+      const editor = document.getElementById("editor");
+      const notice = document.getElementById("notice");
+      const wordCount = document.getElementById("wordCount");
+
+      function loadState() {
+        fileNameInput.value = state.fileName;
+        titleInput.value = state.title;
+        subtitleInput.value = state.subtitle;
+        editor.innerHTML = state.content;
+        document.title = state.fileName;
+        document.querySelector("header h1").textContent = state.title;
+        updateStats();
+      }
+
+      function captureState() {
+        return {
+          fileName: (fileNameInput.value || "document.odoc.html").trim(),
+          title: (titleInput.value || "Untitled Document").trim(),
+          subtitle: (subtitleInput.value || "").trim(),
+          content: editor.innerHTML
+        };
+      }
+
+      function updateStats() {
+        const text = editor.textContent || "";
+        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+        wordCount.textContent = words + " words";
+        document.querySelector("header h1").textContent = titleInput.value || "Untitled Document";
+      }
+
+      function downloadFile(name, text, type) {
+        const blob = new Blob([text], { type });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = name;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+      }
+
+      function saveSelfContained() {
+        const nextState = captureState();
+        const clone = document.documentElement.cloneNode(true);
+        clone.querySelector("#embedded-state").textContent = JSON.stringify(nextState, null, 2);
+        const serialized = "<!DOCTYPE html>\n" + clone.outerHTML;
+        downloadFile(nextState.fileName, serialized, "text/html");
+        notice.textContent = "Saved a new self-contained document.";
+      }
+
+      function downloadRenderedHtml() {
+        const nextState = captureState();
+        const exported = [
+          "<!DOCTYPE html>",
+          "<html lang=\"en\">",
+          "<head>",
+          "<meta charset=\"utf-8\">",
+          "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+          "<title>" + escapeHtml(nextState.title) + "</title>",
+          "<style>body{max-width:760px;margin:3rem auto;padding:0 1rem;font:18px/1.7 Georgia,serif;color:#111827}h1,h2,h3{font-family:\"Avenir Next\",sans-serif}blockquote{padding-left:1rem;border-left:4px solid #94a3b8;color:#334155}</style>",
+          "</head>",
+          "<body>",
+          "<h1>" + escapeHtml(nextState.title) + "</h1>",
+          nextState.subtitle ? "<p><em>" + escapeHtml(nextState.subtitle) + "</em></p>" : "",
+          nextState.content,
+          "</body>",
+          "</html>"
+        ].join("");
+        const renderedName = nextState.fileName.replace(/\.html?$/i, ".rendered.html");
+        downloadFile(renderedName, exported, "text/html");
+        notice.textContent = "Downloaded the rendered HTML.";
+      }
+
+      function escapeHtml(value) {
+        return value
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;");
+      }
+
+      function focusEditor() {
+        editor.focus();
+        updateStats();
+      }
+
+      document.querySelectorAll("[data-command]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const command = button.dataset.command;
+          const value = button.dataset.value || null;
+          document.execCommand(command, false, value);
+          focusEditor();
+        });
+      });
+
+      document.getElementById("createLink").addEventListener("click", () => {
+        const url = window.prompt("Enter a URL");
+        if (!url) {
+          return;
+        }
+        document.execCommand("createLink", false, url);
+        focusEditor();
+      });
+
+      document.getElementById("saveSelfContained").addEventListener("click", saveSelfContained);
+      document.getElementById("downloadHtml").addEventListener("click", downloadRenderedHtml);
+      editor.addEventListener("input", updateStats);
+      titleInput.addEventListener("input", updateStats);
+      loadState();
+    })();
+  </script>
+</body>
+</html>

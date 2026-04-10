@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>scan.opdf.html</title>
+  <style>
+    :root {
+      --bg: #f2f4f8;
+      --panel: #fbfdff;
+      --ink: #101828;
+      --accent: #1d4ed8;
+      --accent-soft: #dbeafe;
+      --line: #d0d9e6;
+      --muted: #475467;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font: 16px/1.5 "Avenir Next", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(219, 234, 254, 0.95), transparent 22rem),
+        linear-gradient(180deg, #eef2ff 0%, var(--bg) 60%);
+    }
+
+    .app {
+      width: min(1320px, calc(100vw - 2rem));
+      margin: 1rem auto;
+      padding: 1rem;
+      border-radius: 26px;
+      border: 1px solid rgba(29, 78, 216, 0.16);
+      background: rgba(251, 253, 255, 0.92);
+      box-shadow: 0 24px 64px rgba(15, 23, 42, 0.12);
+      backdrop-filter: blur(12px);
+    }
+
+    header {
+      display: grid;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 0.97;
+    }
+
+    p {
+      margin: 0;
+      max-width: 64ch;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: minmax(320px, 430px) minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .panel {
+      padding: 1rem;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(208, 217, 230, 0.95);
+    }
+
+    label {
+      display: grid;
+      gap: 0.35rem;
+      margin-bottom: 0.9rem;
+      font-weight: 600;
+    }
+
+    input,
+    textarea,
+    button {
+      font: inherit;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 9rem;
+      resize: vertical;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-top: 0.5rem;
+    }
+
+    button {
+      padding: 0.78rem 1rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 140ms ease, box-shadow 140ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(16, 24, 40, 0.14);
+    }
+
+    .primary {
+      background: var(--accent);
+      color: #eff6ff;
+      font-weight: 700;
+    }
+
+    .secondary {
+      background: #ffffff;
+      color: var(--ink);
+      border-color: rgba(208, 217, 230, 0.95);
+    }
+
+    .previewShell {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .previewMeta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .viewer {
+      width: 100%;
+      min-height: 72vh;
+      border: 0;
+      border-radius: 22px;
+      background: #ffffff;
+      box-shadow: inset 0 0 0 1px rgba(208, 217, 230, 0.95);
+    }
+
+    .notice {
+      min-height: 1.3rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .viewer {
+        min-height: 56vh;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .app {
+        width: calc(100vw - 1rem);
+        padding: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <span class="eyebrow">Portable PDF Generator</span>
+      <h1>Hello World Scan</h1>
+      <p>
+        This <code>.opdf.html</code> file generates and previews a real PDF in the browser, keeps notes beside it,
+        and can export a new self-contained copy with the same PDF software embedded inside.
+      </p>
+    </header>
+
+    <section class="layout">
+      <div class="panel">
+        <label>
+          Export file name
+          <input id="fileName" type="text" value="scan.opdf.html">
+        </label>
+        <label>
+          PDF title
+          <input id="pdfTitle" type="text" value="Hello World Scan">
+        </label>
+        <label>
+          PDF body
+          <textarea id="pdfBody"></textarea>
+        </label>
+        <label>
+          Notes stored in the portable file
+          <textarea id="pdfNotes"></textarea>
+        </label>
+        <div class="actions">
+          <button id="saveSelfContained" class="primary">Save Self-Contained Copy</button>
+          <button id="downloadPdf" class="secondary">Download Raw PDF</button>
+          <button id="openPdf" class="secondary">Open Raw PDF</button>
+        </div>
+        <div id="notice" class="notice" aria-live="polite"></div>
+      </div>
+
+      <div class="previewShell">
+        <div class="previewMeta">
+          <strong>Live PDF Preview</strong>
+          <span id="pageInfo"></span>
+        </div>
+        <iframe id="pdfFrame" class="viewer" title="Generated PDF preview"></iframe>
+      </div>
+    </section>
+  </div>
+
+  <script id="embedded-state" type="application/json">
+{
+  "fileName": "scan.opdf.html",
+  "title": "Hello World Scan",
+  "body": "Hello world.\\n\\nThis file generates a fresh PDF from the text you write here.\\n\\nThe preview on the right is a real PDF document created entirely in the browser.\\n\\nSave a self-contained copy and the next file will include the same PDF generator and notes panel.",
+  "notes": "Use this side panel for review notes, OCR comments, or quick handoff context."
+}
+  </script>
+  <script>
+    (() => {
+      const stateNode = document.getElementById("embedded-state");
+      const state = JSON.parse(stateNode.textContent);
+      const fileNameInput = document.getElementById("fileName");
+      const titleInput = document.getElementById("pdfTitle");
+      const bodyInput = document.getElementById("pdfBody");
+      const notesInput = document.getElementById("pdfNotes");
+      const frame = document.getElementById("pdfFrame");
+      const pageInfo = document.getElementById("pageInfo");
+      const notice = document.getElementById("notice");
+      let currentPdfUrl = null;
+
+      function loadState() {
+        fileNameInput.value = state.fileName;
+        titleInput.value = state.title;
+        bodyInput.value = state.body;
+        notesInput.value = state.notes;
+        document.title = state.fileName;
+        document.querySelector("header h1").textContent = state.title;
+        refreshPreview();
+      }
+
+      function captureState() {
+        return {
+          fileName: (fileNameInput.value || "scan.opdf.html").trim(),
+          title: (titleInput.value || "Untitled PDF").trim(),
+          body: bodyInput.value,
+          notes: notesInput.value
+        };
+      }
+
+      function sanitizeAscii(value) {
+        return value
+          .replace(/[^\x20-\x7E\n]/g, "?")
+          .replace(/\\/g, "\\\\")
+          .replace(/\(/g, "\\(")
+          .replace(/\)/g, "\\)");
+      }
+
+      function wrapText(text, width) {
+        const paragraphs = text.split(/\n/);
+        const lines = [];
+        paragraphs.forEach((paragraph) => {
+          if (!paragraph.trim()) {
+            lines.push("");
+            return;
+          }
+          const words = paragraph.split(/\s+/);
+          let current = "";
+          words.forEach((word) => {
+            const next = current ? current + " " + word : word;
+            if (next.length > width) {
+              if (current) {
+                lines.push(current);
+              }
+              current = word;
+            } else {
+              current = next;
+            }
+          });
+          if (current) {
+            lines.push(current);
+          }
+        });
+        return lines;
+      }
+
+      function buildPdfText(stateValue) {
+        const title = sanitizeAscii(stateValue.title || "Untitled PDF");
+        const bodyLines = wrapText(sanitizeAscii(stateValue.body || ""), 78);
+        const commands = [];
+        commands.push("BT");
+        commands.push("/F1 24 Tf");
+        commands.push("72 740 Td");
+        commands.push("(" + title + ") Tj");
+        commands.push("/F1 12 Tf");
+        commands.push("0 -34 Td");
+        bodyLines.slice(0, 32).forEach((line, index) => {
+          if (index > 0) {
+            commands.push("0 -18 Td");
+          }
+          commands.push("(" + line + ") Tj");
+        });
+        commands.push("ET");
+        return commands.join("\n");
+      }
+
+      function buildPdfString(stateValue) {
+        const content = buildPdfText(stateValue);
+        const objects = [
+          "<< /Type /Catalog /Pages 2 0 R >>",
+          "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+          "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>",
+          "<< /Length " + content.length + " >>\nstream\n" + content + "\nendstream",
+          "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>"
+        ];
+
+        let pdf = "%PDF-1.4\n";
+        const offsets = [0];
+
+        objects.forEach((objectText, index) => {
+          offsets.push(pdf.length);
+          pdf += (index + 1) + " 0 obj\n" + objectText + "\nendobj\n";
+        });
+
+        const xrefOffset = pdf.length;
+        pdf += "xref\n0 " + (objects.length + 1) + "\n";
+        pdf += "0000000000 65535 f \n";
+
+        for (let i = 1; i <= objects.length; i += 1) {
+          pdf += String(offsets[i]).padStart(10, "0") + " 00000 n \n";
+        }
+
+        pdf += "trailer\n<< /Size " + (objects.length + 1) + " /Root 1 0 R >>\n";
+        pdf += "startxref\n" + xrefOffset + "\n%%EOF";
+        return pdf;
+      }
+
+      function buildPdfBlob(stateValue) {
+        return new Blob([buildPdfString(stateValue)], { type: "application/pdf" });
+      }
+
+      function refreshPreview() {
+        const nextState = captureState();
+        document.querySelector("header h1").textContent = nextState.title || "Untitled PDF";
+
+        if (currentPdfUrl) {
+          URL.revokeObjectURL(currentPdfUrl);
+        }
+
+        const pdfBlob = buildPdfBlob(nextState);
+        currentPdfUrl = URL.createObjectURL(pdfBlob);
+        frame.src = currentPdfUrl;
+        pageInfo.textContent = "1 page generated in-browser";
+      }
+
+      function downloadFile(name, content, type) {
+        const blob = new Blob([content], { type });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = name;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+      }
+
+      function saveSelfContained() {
+        const nextState = captureState();
+        const clone = document.documentElement.cloneNode(true);
+        clone.querySelector("#embedded-state").textContent = JSON.stringify(nextState, null, 2);
+        const serialized = "<!DOCTYPE html>\n" + clone.outerHTML;
+        downloadFile(nextState.fileName, serialized, "text/html");
+        notice.textContent = "Saved a new self-contained PDF file.";
+      }
+
+      function downloadPdf() {
+        const nextState = captureState();
+        const blob = buildPdfBlob(nextState);
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = nextState.fileName.replace(/\.html?$/i, ".pdf");
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+        notice.textContent = "Downloaded the raw PDF.";
+      }
+
+      function openPdf() {
+        const nextState = captureState();
+        const blob = buildPdfBlob(nextState);
+        const url = URL.createObjectURL(blob);
+        window.open(url, "_blank", "noopener");
+        setTimeout(() => URL.revokeObjectURL(url), 20000);
+        notice.textContent = "Opened the raw PDF in a new tab.";
+      }
+
+      document.getElementById("saveSelfContained").addEventListener("click", saveSelfContained);
+      document.getElementById("downloadPdf").addEventListener("click", downloadPdf);
+      document.getElementById("openPdf").addEventListener("click", openPdf);
+      fileNameInput.addEventListener("input", refreshPreview);
+      titleInput.addEventListener("input", refreshPreview);
+      bodyInput.addEventListener("input", refreshPreview);
+      notesInput.addEventListener("input", refreshPreview);
+      loadState();
+    })();
+  </script>
+</body>
+</html>

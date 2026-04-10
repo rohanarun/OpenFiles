@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>image.oimg.html</title>
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --panel: #fffdf9;
+      --ink: #1f2937;
+      --accent: #be123c;
+      --accent-soft: #ffe4e6;
+      --line: #dfd6cf;
+      --muted: #6b7280;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font: 16px/1.5 "Avenir Next", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(255, 228, 230, 0.9), transparent 24rem),
+        linear-gradient(180deg, #fff7ed 0%, var(--bg) 60%);
+    }
+
+    .app {
+      width: min(1320px, calc(100vw - 2rem));
+      margin: 1rem auto;
+      padding: 1rem;
+      border-radius: 26px;
+      border: 1px solid rgba(190, 18, 60, 0.15);
+      background: rgba(255, 253, 249, 0.92);
+      box-shadow: 0 24px 64px rgba(31, 41, 55, 0.12);
+      backdrop-filter: blur(10px);
+    }
+
+    header {
+      display: grid;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 0.97;
+    }
+
+    p {
+      margin: 0;
+      max-width: 64ch;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: minmax(310px, 400px) minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .panel,
+    .stage {
+      padding: 1rem;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(223, 214, 207, 0.95);
+    }
+
+    label {
+      display: grid;
+      gap: 0.35rem;
+      margin-bottom: 0.9rem;
+      font-weight: 600;
+    }
+
+    input,
+    textarea,
+    button {
+      font: inherit;
+    }
+
+    input[type="text"],
+    input[type="color"],
+    input[type="range"] {
+      width: 100%;
+    }
+
+    input[type="text"] {
+      padding: 0.85rem 1rem;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--ink);
+    }
+
+    input[type="color"] {
+      height: 3rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 0.25rem;
+    }
+
+    input[type="range"] {
+      accent-color: var(--accent);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-top: 0.5rem;
+    }
+
+    button {
+      padding: 0.78rem 1rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 140ms ease, box-shadow 140ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(31, 41, 55, 0.14);
+    }
+
+    .primary {
+      background: var(--accent);
+      color: #fff1f2;
+      font-weight: 700;
+    }
+
+    .secondary {
+      background: #ffffff;
+      color: var(--ink);
+      border-color: rgba(223, 214, 207, 0.95);
+    }
+
+    .stage canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 18px;
+      background: #f8fafc;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    .caption {
+      margin-top: 0.8rem;
+      color: var(--muted);
+    }
+
+    .notice {
+      min-height: 1.3rem;
+      margin-top: 0.75rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .app {
+        width: calc(100vw - 1rem);
+        padding: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <span class="eyebrow">Portable Image File</span>
+      <h1>Hello World Image</h1>
+      <p>
+        This <code>.oimg.html</code> file stores an image, a simple annotation tool, and export actions in one place.
+        Load an image, draw on it, and save a fresh self-contained copy with the same software included.
+      </p>
+    </header>
+
+    <section class="layout">
+      <div class="panel">
+        <label>
+          Export file name
+          <input id="fileName" type="text" value="image.oimg.html">
+        </label>
+        <label>
+          Caption
+          <input id="caption" type="text" value="Hello world from a portable image file.">
+        </label>
+        <label>
+          Brush color
+          <input id="brushColor" type="color" value="#fff25c">
+        </label>
+        <label>
+          Brush size
+          <input id="brushSize" type="range" min="2" max="24" step="1" value="8">
+        </label>
+
+        <div class="actions">
+          <button id="loadImage" class="secondary">Load Image</button>
+          <button id="clearMarkup" class="secondary">Clear Markup</button>
+          <button id="saveSelfContained" class="primary">Save Self-Contained Copy</button>
+          <button id="downloadPng" class="secondary">Download PNG</button>
+        </div>
+
+        <input id="imagePicker" type="file" accept="image/*" hidden>
+        <div id="notice" class="notice" aria-live="polite"></div>
+      </div>
+
+      <div class="stage">
+        <canvas id="canvas" width="960" height="540"></canvas>
+        <div class="caption" id="captionPreview"></div>
+      </div>
+    </section>
+  </div>
+
+  <script id="embedded-state" type="application/json">
+{
+  "fileName": "image.oimg.html",
+  "caption": "Hello world from a portable image file.",
+  "brushColor": "#fff25c",
+  "brushSize": 8,
+  "width": 960,
+  "height": 540,
+  "imageDataUrl": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20960%20540%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%25%22%20x2%3D%22100%25%22%20y1%3D%220%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23161b33%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23be123c%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%22960%22%20height%3D%22540%22%20fill%3D%22url(%23bg)%22/%3E%3Ccircle%20cx%3D%22770%22%20cy%3D%22118%22%20r%3D%2274%22%20fill%3D%22rgba(255%2C255%2C255%2C0.14)%22/%3E%3Ccircle%20cx%3D%22152%22%20cy%3D%22420%22%20r%3D%22118%22%20fill%3D%22rgba(255%2C255%2C255%2C0.08)%22/%3E%3Ctext%20x%3D%2280%22%20y%3D%22216%22%20fill%3D%22%23fff7ed%22%20font-size%3D%2278%22%20font-family%3D%22Avenir%20Next%2C%20Segoe%20UI%2C%20sans-serif%22%20font-weight%3D%22700%22%3EHello%20World%3C/text%3E%3Ctext%20x%3D%2280%22%20y%3D%22282%22%20fill%3D%22rgba(255%2C247%2C237%2C0.78)%22%20font-size%3D%2229%22%20font-family%3D%22Avenir%20Next%2C%20Segoe%20UI%2C%20sans-serif%22%3EThis%20image%20travels%20with%20its%20own%20lightweight%20annotation%20tool.%3C/text%3E%3C/svg%3E",
+  "strokes": []
+}
+  </script>
+  <script>
+    (() => {
+      const stateNode = document.getElementById("embedded-state");
+      const state = JSON.parse(stateNode.textContent);
+      const fileNameInput = document.getElementById("fileName");
+      const captionInput = document.getElementById("caption");
+      const brushColorInput = document.getElementById("brushColor");
+      const brushSizeInput = document.getElementById("brushSize");
+      const imagePicker = document.getElementById("imagePicker");
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const captionPreview = document.getElementById("captionPreview");
+      const notice = document.getElementById("notice");
+      let baseImage = null;
+      let drawing = null;
+
+      function loadState() {
+        fileNameInput.value = state.fileName;
+        captionInput.value = state.caption;
+        brushColorInput.value = state.brushColor;
+        brushSizeInput.value = String(state.brushSize);
+        document.title = state.fileName;
+        document.querySelector("header h1").textContent = "Hello World Image";
+        loadBaseImage(state.imageDataUrl);
+      }
+
+      function captureState() {
+        return {
+          fileName: (fileNameInput.value || "image.oimg.html").trim(),
+          caption: captionInput.value,
+          brushColor: brushColorInput.value,
+          brushSize: Number(brushSizeInput.value || 8),
+          width: canvas.width,
+          height: canvas.height,
+          imageDataUrl: state.imageDataUrl,
+          strokes: state.strokes
+        };
+      }
+
+      function loadBaseImage(dataUrl) {
+        const image = new Image();
+        image.onload = () => {
+          baseImage = image;
+          canvas.width = image.naturalWidth || state.width || 960;
+          canvas.height = image.naturalHeight || state.height || 540;
+          render();
+        };
+        image.src = dataUrl;
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (baseImage) {
+          ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+        }
+
+        state.strokes.forEach((stroke) => {
+          if (!stroke.points.length) {
+            return;
+          }
+          ctx.strokeStyle = stroke.color;
+          ctx.lineWidth = stroke.size;
+          ctx.lineJoin = "round";
+          ctx.lineCap = "round";
+          ctx.beginPath();
+          stroke.points.forEach((point, index) => {
+            if (index === 0) {
+              ctx.moveTo(point.x, point.y);
+            } else {
+              ctx.lineTo(point.x, point.y);
+            }
+          });
+          ctx.stroke();
+        });
+
+        captionPreview.textContent = captionInput.value;
+        if (captionInput.value) {
+          const ribbonHeight = Math.max(56, canvas.height * 0.12);
+          ctx.fillStyle = "rgba(17, 24, 39, 0.64)";
+          ctx.fillRect(0, canvas.height - ribbonHeight, canvas.width, ribbonHeight);
+          ctx.fillStyle = "#fff7ed";
+          ctx.font = "700 " + Math.max(22, canvas.width * 0.03) + "px Avenir Next, Segoe UI, sans-serif";
+          ctx.fillText(captionInput.value, 28, canvas.height - ribbonHeight / 2 + 10);
+        }
+      }
+
+      function pointerPosition(event) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        return {
+          x: (event.clientX - rect.left) * scaleX,
+          y: (event.clientY - rect.top) * scaleY
+        };
+      }
+
+      function beginStroke(event) {
+        const point = pointerPosition(event);
+        drawing = {
+          color: brushColorInput.value,
+          size: Number(brushSizeInput.value || 8),
+          points: [point]
+        };
+        state.strokes = state.strokes.concat([drawing]);
+        render();
+      }
+
+      function moveStroke(event) {
+        if (!drawing) {
+          return;
+        }
+        drawing.points.push(pointerPosition(event));
+        render();
+      }
+
+      function endStroke() {
+        drawing = null;
+      }
+
+      function downloadFile(name, blob) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = name;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+      }
+
+      function saveSelfContained() {
+        const nextState = captureState();
+        const clone = document.documentElement.cloneNode(true);
+        clone.querySelector("#embedded-state").textContent = JSON.stringify(nextState, null, 2);
+        const serialized = "<!DOCTYPE html>\n" + clone.outerHTML;
+        downloadFile(nextState.fileName, new Blob([serialized], { type: "text/html" }));
+        notice.textContent = "Saved a new self-contained image file.";
+      }
+
+      function downloadPng() {
+        render();
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            return;
+          }
+          const name = (fileNameInput.value || "image.oimg.html").replace(/\.html?$/i, ".png");
+          downloadFile(name, blob);
+          notice.textContent = "Downloaded a PNG export.";
+        }, "image/png");
+      }
+
+      document.getElementById("loadImage").addEventListener("click", () => imagePicker.click());
+      imagePicker.addEventListener("change", async (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) {
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+          state.imageDataUrl = reader.result;
+          state.strokes = [];
+          loadBaseImage(state.imageDataUrl);
+          notice.textContent = "Loaded a new source image into the portable file.";
+        };
+        reader.readAsDataURL(file);
+      });
+
+      document.getElementById("clearMarkup").addEventListener("click", () => {
+        state.strokes = [];
+        render();
+        notice.textContent = "Cleared the markup layer.";
+      });
+
+      document.getElementById("saveSelfContained").addEventListener("click", saveSelfContained);
+      document.getElementById("downloadPng").addEventListener("click", downloadPng);
+      captionInput.addEventListener("input", render);
+      brushColorInput.addEventListener("input", render);
+      brushSizeInput.addEventListener("input", render);
+      canvas.addEventListener("pointerdown", beginStroke);
+      canvas.addEventListener("pointermove", moveStroke);
+      canvas.addEventListener("pointerup", endStroke);
+      canvas.addEventListener("pointerleave", endStroke);
+      loadState();
+    })();
+  </script>
+</body>
+</html>
