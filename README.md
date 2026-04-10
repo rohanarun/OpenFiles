@@ -1,4 +1,6 @@
-# Portable `o` Files
+# Open Files
+![OpenFiles](/Users/rohanarun/Desktop/slides/openfiles/openfiles.png)
+
 
 ## A simple idea: make the file carry its own software
 
