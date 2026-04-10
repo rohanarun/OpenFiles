@@ -1,5 +1,5 @@
 # Open Files
-![OpenFiles](/Users/rohanarun/Desktop/slides/openfiles/openfiles.png)
+![OpenFiles](https://github.com/rohanarun/OpenFiles/blob/ef3c9a9a42505196e80626aafa51f8cc7177960c/openfiles.png)
 
 
 ## A simple idea: make the file carry its own software
